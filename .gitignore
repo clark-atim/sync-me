@@ -1,0 +1,38 @@
+# -----------------------------
+# .NET / C# Backend
+# -----------------------------
+backend/NotesAPI/bin/
+backend/NotesAPI/obj/
+*.user
+*.suo
+.vs/
+
+# -----------------------------
+# React Frontend
+# -----------------------------
+frontend/node_modules/
+frontend/build/
+frontend/.cache/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# -----------------------------
+# Docker
+# -----------------------------
+docker-compose.override.yml
+*.env
+
+# -----------------------------
+# OS / Editor
+# -----------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
