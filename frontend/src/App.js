@@ -24,6 +24,17 @@ function App() {
   const [showRegister, setShowRegister] = useState(false);
   const [authError, setAuthError] = useState("");
   const [isSyncing, setIsSyncing] = useState(false);
+
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('syncme-theme');
+    return savedTheme ? JSON.parse(savedTheme): true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('syncme-theme', JSON.stringify(darkMode));
+  });
+
+
   
   const [users, setUsers] = useState(() => {
     const savedUsers = localStorage.getItem('syncme-users');
@@ -139,7 +150,7 @@ function App() {
 
   if (!isLoggedIn) {
     return (
-      <div className="auth-container">
+      <div className={`auth-container ${darkMode ? '' : 'light-mode'}`}>
         <div className="auth-card">
           <div className="logo-container">
             <div className="icon-wrapper">
@@ -150,8 +161,11 @@ function App() {
             </div>
             <h1 className="logo-text">SyncMe</h1>
           </div>
+
           {authError && <div className="auth-error-message">{authError}</div>}
-          <h2 style={{ color: 'white' }}>{showRegister ? "Create Account" : "Welcome Back"}</h2>
+
+          <h2 style={{ color: darkMode ? 'white' : '#1e1e1e'}}>{showRegister ? "Create Account" : "Welcome Back"}</h2>
+
           <input type="email" placeholder="Email Address" className="auth-input" />
           <input type="password" placeholder="Password" className="auth-input" />
           <button className="login-btn" onClick={handleAuth}> 
@@ -166,7 +180,7 @@ function App() {
   }
 
   return (
-    <div className="syncme-layout">
+    <div className={`syncme-layout ${darkMode ? '' : 'light-mode'}`}>
       <aside className="sidebar">
         <div className="sidebar-top">
           <div className="logo-container">
@@ -178,7 +192,7 @@ function App() {
             </div>
             <h1 className="logo-text">SyncMe</h1>
           </div>
-          <div style={{ color: '#8b949e', fontSize: '11px', textAlign: 'center', marginBottom: '10px' }}>
+          <div style={{ color: darkMode ? '#8b949e' : "#666666", fontSize: '11px', textAlign: 'center', marginBottom: '10px' }}>
             {isSyncing ? "Saving..." : "Saved locally"}
           </div>
           <button className="new-note-btn" onClick={createNote}>+ New Note</button>
@@ -209,9 +223,21 @@ function App() {
       </aside>
       <main className="editor-area">
         <header className="toolbar">
-          <button className="tool-btn" onClick={() => applyStyle('bold')}>B</button>
-          <button className="tool-btn" onClick={() => applyStyle('italic')}>I</button>
-          <button className="tool-btn" onClick={() => applyStyle('underline')}>U</button>
+          <div className="formatting-tools">
+            <button className="tool-btn bold-btn" onClick={() => applyStyle('bold')}>B</button>
+            <button className="tool-btn italic-btn" onClick={() => applyStyle('italic')}>I</button>
+            <button className="tool-btn underline-btn" onClick={() => applyStyle('underline')}>U</button>
+          </div>
+
+          <div className='theme-switch-wrapper'>
+            <span className='theme-switch-container'>
+              {darkMode ? "Dark Mode" : "Light Mode"}
+            </span>
+            <label className="theme-switch">
+            <input type="checkbox" checked={!darkMode} onChange={() => setDarkMode(!darkMode)}/>
+            <span className="slider round"></span>
+          </label>
+          </div>
         </header>
         <section className="content">
           {activeNote ? (
