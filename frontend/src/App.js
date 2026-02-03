@@ -84,6 +84,18 @@ function App() {
       return;
     }
 
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)){
+      setAuthError("Please enter a valid email address.");
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/;
+    if (showRegister && !passwordRegex.test(password)){
+      setAuthError("Password must be atlest 8 characters, include an uppercase letter, a number, and a special character.");
+      return;
+    }
+
     if (showRegister) {
       const userExists = users.find(u => u.email === email);
       if (userExists) {
