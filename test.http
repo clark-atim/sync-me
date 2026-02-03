@@ -1,0 +1,61 @@
+### Variables
+@baseUrl = http://localhost:5000
+
+# ==========================================
+# AUTHENTICATION ROUTES
+# ==========================================
+
+### 1. Signup (Create a new user)
+POST {{baseUrl}}/signup
+Content-Type: application/json
+
+{
+    "email": "student@example.com",
+    "password": "Password123!"
+}
+
+### 2. Login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "student@example.com",
+    "password": "Password123!"
+}
+
+
+# ==========================================
+# NOTES ROUTES
+# ==========================================
+
+### 3. Create a New Note
+# After running this, look at the response to get the "id"
+POST {{baseUrl}}/notes
+Content-Type: application/json
+
+{
+    "title": "My First Note",
+    "content": "This note was created via the VS Code REST Client.",
+    "isDeleted": false
+}
+
+### 4. Get All Notes
+GET {{baseUrl}}/notes
+
+### 5. Get Note by ID
+# Replace '1' with an actual ID from your database
+GET {{baseUrl}}/notes/1
+
+### 6. Update a Note (PUT)
+# Replace '1' with the ID you want to update
+PUT {{baseUrl}}/notes/2
+Content-Type: application/json
+
+{
+    "title": "Updated Title",
+    "content": "This content has been modified successfully!"
+}
+
+### 7. Delete a Note (Soft Delete)
+# Replace '1' with the ID you want to delete
+DELETE {{baseUrl}}/notes/1

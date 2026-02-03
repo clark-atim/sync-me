@@ -6,6 +6,15 @@ using NotesAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddDbContext<NotesDbContext>(options =>
     options.UseNpgsql(
@@ -32,6 +41,8 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while migrating the database.");
     }
 }
+
+app.UseCors();
 
 //Get All Notes
 app.MapGet("/notes", async (NotesDbContext db) =>
@@ -93,5 +104,38 @@ app.MapDelete("/notes/{id}", async (int id, NotesDbContext db) =>
     await db.SaveChangesAsync();
     return Results.NoContent();
 });
+
+//Login
+app.MapPost("/login", async (User loginInfo, NotesDbContext db) =>
+{
+    var user = await db.Users
+        .FirstOrDefaultAsync(u => u.Email == loginInfo.Email && u.Password == loginInfo.Password);
+
+    if (user is null) 
+    {
+        return Results.Unauthorized();
+    }
+
+    // Return the email so the frontend knows who is logged in
+    return Results.Ok(new { user.Email });
+});
+
+//Signup
+app.MapPost("/signup", async (User user, NotesDbContext db) =>
+{
+    // Check if the user already exists
+    var existingUser = await db.Users.AnyAsync(u => u.Email == user.Email);
+    if (existingUser) 
+    {
+        return Results.BadRequest("Email already registered.");
+    }
+
+    // No encryption yet (as requested)
+    db.Users.Add(user);
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new { message = "User created successfully" });
+});
+
 
 app.Run();
