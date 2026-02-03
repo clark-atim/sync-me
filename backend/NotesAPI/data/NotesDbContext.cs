@@ -10,5 +10,6 @@ namespace NotesAPI.Data
         }
 
         public DbSet<Note> Notes => Set<Note>();
+        public DbSet<User> Users => Set<User>();    
     }
 }
