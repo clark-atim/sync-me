@@ -14,6 +14,26 @@ builder.Services.AddDbContext<NotesDbContext>(options =>
 
 var app = builder.Build();
 
+// Apply migrations on container startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<NotesDbContext>();
+        if (context.Database.GetPendingMigrations().Any())
+        {
+            context.Database.Migrate();
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
+}
+
+
 //Get All Notes
 app.MapGet("/notes", async (NotesDbContext db) =>
 {
